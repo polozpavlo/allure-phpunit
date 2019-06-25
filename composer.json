@@ -16,10 +16,10 @@
         "source": "https://github.com/allure-framework/allure-phpunit"
     },
     "require": {
-	    "php": ">=7.0.0",
-        "phpunit/phpunit": ">=6.0.0",
+	    "php": ">=7.1.0",
+        "phpunit/phpunit": "^7.5",
         "mikey179/vfsStream": "1.*",
-        "polozpavlo/allure-php-commons": "^1.1"
+        "polozpavlo/allure-php-commons": "^1.1.7"
     },
     "autoload": {
         "psr-0": {
