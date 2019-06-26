@@ -19,7 +19,7 @@
 	    "php": ">=7.1.0",
         "phpunit/phpunit": "^7.5",
         "mikey179/vfsStream": "1.*",
-        "polozpavlo/allure-php-commons": "^1.1.7"
+        "polozpavlo/allure-php-commons": "1.1.6"
     },
     "autoload": {
         "psr-0": {
