@@ -21,6 +21,7 @@ use Yandex\Allure\Adapter\Event\TestCaseStartedEvent;
 use Yandex\Allure\Adapter\Event\TestSuiteFinishedEvent;
 use Yandex\Allure\Adapter\Event\TestSuiteStartedEvent;
 use Yandex\Allure\Adapter\Model;
+use Throwable;
 
 class AllureAdapter implements TestListener
 {
@@ -58,7 +59,7 @@ class AllureAdapter implements TestListener
         }
 
         $this->prepareOutputDirectory($outputDirectory, $deletePreviousResults);
-        
+
         // Add standard PHPUnit annotations
         Annotation\AnnotationProvider::addIgnoredAnnotations($this->ignoredAnnotations);
         // Add custom ignored annotations
@@ -82,7 +83,7 @@ class AllureAdapter implements TestListener
             Model\Provider::setOutputDirectory($outputDirectory);
         }
     }
-    
+
     /**
      * An error occurred.
      *
@@ -90,7 +91,7 @@ class AllureAdapter implements TestListener
      * @param Exception $e
      * @param float $time
      */
-    public function addError(Test $test, Exception $e, $time)
+    public function addError(Test $test, Throwable $e, float $time): void
     {
         $event = new TestCaseBrokenEvent();
         Allure::lifecycle()->fire($event->withException($e)->withMessage($e->getMessage()));
@@ -103,7 +104,7 @@ class AllureAdapter implements TestListener
      * @param \PHPUnit\Framework\Warning $e
      * @param float $time
      */
-    public function addWarning(Test $test, Warning $e, $time)
+    public function addWarning(Test $test, Warning $e, float $time): void
     {
         // TODO: Implement addWarning() method.
     }
@@ -115,7 +116,7 @@ class AllureAdapter implements TestListener
      * @param AssertionFailedError $e
      * @param float $time
      */
-    public function addFailure(Test $test, AssertionFailedError $e, $time)
+    public function addFailure(Test $test, AssertionFailedError $e, float $time): void
     {
         $event = new TestCaseFailedEvent();
 
@@ -139,7 +140,7 @@ class AllureAdapter implements TestListener
      * @param Exception $e
      * @param float $time
      */
-    public function addIncompleteTest(Test $test, Exception $e, $time)
+    public function addIncompleteTest(Test $test, Throwable $e, float $time): void
     {
         $event = new TestCasePendingEvent();
         Allure::lifecycle()->fire($event->withException($e));
@@ -153,7 +154,7 @@ class AllureAdapter implements TestListener
      * @param float $time
      * @since  Method available since Release 4.0.0
      */
-    public function addRiskyTest(Test $test, Exception $e, $time)
+    public function addRiskyTest(Test $test, Throwable $e, float $time): void
     {
         $this->addIncompleteTest($test, $e, $time);
     }
@@ -166,7 +167,7 @@ class AllureAdapter implements TestListener
      * @param float $time
      * @since  Method available since Release 3.0.0
      */
-    public function addSkippedTest(Test $test, Exception $e, $time)
+    public function addSkippedTest(Test $test, Throwable $e, float $time): void
     {
         $shouldCreateStartStopEvents = false;
         if ($test instanceof TestCase){
@@ -191,7 +192,7 @@ class AllureAdapter implements TestListener
      * @param TestSuite $suite
      * @since  Method available since Release 2.2.0
      */
-    public function startTestSuite(TestSuite $suite)
+    public function startTestSuite(TestSuite $suite): void
     {
         if ($suite instanceof DataProviderTestSuite) {
             return;
@@ -218,7 +219,7 @@ class AllureAdapter implements TestListener
      * @param TestSuite $suite
      * @since  Method available since Release 2.2.0
      */
-    public function endTestSuite(TestSuite $suite)
+    public function endTestSuite(TestSuite $suite): void
     {
         if ($suite instanceof DataProviderTestSuite) {
             return;
@@ -232,7 +233,7 @@ class AllureAdapter implements TestListener
      *
      * @param Test $test
      */
-    public function startTest(Test $test)
+    public function startTest(Test $test): void
     {
         if ($test instanceof TestCase) {
             $testName = $test->getName();
@@ -256,7 +257,7 @@ class AllureAdapter implements TestListener
      * @param float $time
      * @throws \Exception
      */
-    public function endTest(Test $test, $time)
+    public function endTest(Test $test, float $time): void
     {
         if ($test instanceof TestCase) {
             Allure::lifecycle()->fire(new TestCaseFinishedEvent());
